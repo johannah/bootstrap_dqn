@@ -8,6 +8,12 @@ Dueling, and DoubleDQN in ALE games.
 
 [Randomized Prior Functions for Deep Reinforcement Learning](https://arxiv.org/abs/1806.03335)
 
+# Tested w/ dependencies
+
+atari-py installed from https://github.com/kastnerkyle/atari-py
+torch='1.0.1.post2'
+
+
 # References
 
 We referenced several execellent examples/blogposts to build this codebase: 

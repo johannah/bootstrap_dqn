@@ -3,7 +3,6 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import os
-import tensorflow as tf
 import numpy as np
 from IPython import embed
 from collections import Counter
@@ -78,7 +77,7 @@ def handle_checkpoint(last_save, cnt):
 
 class ActionGetter:
     """Determines an action according to an epsilon greedy strategy with annealing epsilon"""
-    """This class is from fg91's dqn"""
+    """This class is from fg91's dqn. TODO put my function back in"""
     def __init__(self, n_actions, eps_initial=1, eps_final=0.1, eps_final_frame=0.01,
                  eps_evaluation=0.0, eps_annealing_frames=100000,
                  replay_memory_start_size=50000, max_steps=25000000, random_seed=122):
@@ -117,13 +116,12 @@ class ActionGetter:
     def pt_get_action(self, step_number, state, active_head=None, evaluation=False):
         """
         Args:
-            session: A tensorflow session object
-            step_number: Integer, number of the current frame
-            state: A (84, 84, 4) sequence of frames of an Atari game in grayscale
-            main_dqn: A DQN object
+            step_number: int number of the current step
+            state: A (4, 84, 84) sequence of frames of an atari game in grayscale
+            active_head: number of head to use, if None, will run all heads and vote
             evaluation: A boolean saying whether the agent is being evaluated
         Returns:
-            An integer between 0 and n_actions - 1 determining the action the agent perfoms next
+            An integer between 0 and n_actions
         """
         if evaluation:
             eps = self.eps_evaluation
@@ -262,14 +260,6 @@ def train(step_number, last_save):
                 print('last rewards', perf['episode_reward'][-info['PLOT_EVERY_EPISODES']:])
 
                 matplotlib_plot_all(perf)
-                # Scalar summaries for tensorboard
-                summ = sess.run(PERFORMANCE_SUMMARIES,
-                                feed_dict={
-                                           PTLOSS_PH:np.mean(ptloss_list),
-                                           REWARD_PH:np.mean(perf['avg_rewards'][-1])})
-
-                SUMM_WRITER.add_summary(summ, step_number)
-                print("Adding tensorboard", len(perf['episode_reward']), step_number, perf['avg_rewards'][-1])
                 with open('rewards.txt', 'a') as reward_file:
                     print(len(perf['episode_reward']), step_number, perf['avg_rewards'][-1], file=reward_file)
         avg_eval_reward = evaluate(step_number)
@@ -316,8 +306,6 @@ def evaluate(step_number):
     generate_gif(model_base_filedir, step_number, frames_for_gif, eval_rewards[0], name='test', results=results_for_eval)
 
     # Show the evaluation score in tensorboard
-    summ = sess.run(EVAL_SCORE_SUMMARY, feed_dict={EVAL_SCORE_PH:np.mean(eval_rewards)})
-    SUMM_WRITER.add_summary(summ, step_number)
     efile = os.path.join(model_base_filedir, 'eval_rewards.txt')
     with open(efile, 'a') as eval_reward_file:
         print(step_number, np.mean(eval_rewards), file=eval_reward_file)
@@ -338,28 +326,28 @@ if __name__ == '__main__':
 
     info = {
         "GAME":'roms/breakout.bin', # gym prefix
-        "DEVICE":device,
-        "NAME":'FRANKbootstrap_prior', # start files with name
-        "DUELING":True,
-        "DOUBLE_DQN":True,
-        "PRIOR":True,
-        "PRIOR_SCALE":10,
-        "N_ENSEMBLE":9,
-        "LEARN_EVERY_STEPS":4, # should be 1, but is 4 in fg91
+        "DEVICE":device, #cpu vs gpu set by argument
+        "NAME":'FRANKbootstrap_fasteranneal', # start files with name
+        "DUELING":True, # use dueling dqn
+        "DOUBLE_DQN":True, # use double dqn
+        "PRIOR":False, # turn on to use randomized prior
+        "PRIOR_SCALE":10, # what to scale prior by
+        "N_ENSEMBLE":9, # number of bootstrap heads to use. when 1, this is a normal dqn
+        "LEARN_EVERY_STEPS":4, # updates every 4 steps in osband
         "BERNOULLI_PROBABILITY": 0.9, # Probability of experience to go to each head - if 1, every experience goes to every head
         "TARGET_UPDATE":10000, # how often to update target network
         "MIN_HISTORY_TO_LEARN":50000, # in environment frames
         "NORM_BY":255.,  # divide the float(of uint) by this number to normalize - max val of data is 255
-        "EPS_INITIAL":1.0,
-        "EPS_FINAL":0.01,
-        "EPS_EVAL":0.0,
-        #"EPS_ANNEALING_FRAMES":int(1e6),
-        "EPS_ANNEALING_FRAMES":0,
+        "EPS_INITIAL":1.0, # should be 1
+        "EPS_FINAL":0.01, # 0.01 in osband
+        "EPS_EVAL":0.0, # 0 in osband, .05 in others....
+        "EPS_ANNEALING_FRAMES":int(1e6), # this may have been 1e6 in osband
+        #"EPS_ANNEALING_FRAMES":0, # if it annealing is zero, then it will only use the bootstrap after the first MIN_EXAMPLES_TO_LEARN steps which are random
         "EPS_FINAL_FRAME":0.01,
-        "NUM_EVAL_EPISODES":1,
+        "NUM_EVAL_EPISODES":1, # num examples to average in eval
         "BUFFER_SIZE":int(1e6), # Buffer size for experience replay
-        "CHECKPOINT_EVERY_STEPS":500000,
-        "EVAL_FREQUENCY":250000,
+        "CHECKPOINT_EVERY_STEPS":500000, # how often to write pkl of model and npz of data buffer
+        "EVAL_FREQUENCY":250000, # how often to run evaluation episodes
         "ADAM_LEARNING_RATE":6.25e-5,
         "RMS_LEARNING_RATE": 0.00025, # according to paper = 0.00025
         "RMS_DECAY":0.95,
@@ -369,21 +357,19 @@ if __name__ == '__main__':
         "HISTORY_SIZE":4, # how many past frames to use for state input
         "N_EPOCHS":90000,  # Number of episodes to run
         "BATCH_SIZE":32, # Batch size to use for learning
-        "EPSILON_MAX":1.0, # Epsilon greedy exploration ~prob of random action, 0. disables
-        "EPSILON_MIN":.1,
         "GAMMA":.99, # Gamma weight in Q update
         "PLOT_EVERY_EPISODES": 50,
         "CLIP_GRAD":5, # Gradient clipping setting
         "SEED":101,
-        "RANDOM_HEAD":-1,
+        "RANDOM_HEAD":-1, # just used in plotting as demarcation
         "NETWORK_INPUT_SIZE":(84,84),
         "START_TIME":time.time(),
         "MAX_STEPS":int(50e6), # 50e6 steps is 200e6 frames
         "MAX_EPISODE_STEPS":27000, # Orig dqn give 18k steps, Rainbow seems to give 27k steps
-        "FRAME_SKIP":4,
-        "MAX_NO_OP_FRAMES":30,
-        "DEAD_AS_END":True,
-        }
+        "FRAME_SKIP":4, # deterministic frame skips to match deepmind
+        "MAX_NO_OP_FRAMES":30, # random number of noops applied to beginning of each episode
+        "DEAD_AS_END":True, # do you send finished=true to agent while training when it loses a life
+    }
 
     info['FAKE_ACTS'] = [info['RANDOM_HEAD'] for x in range(info['N_ENSEMBLE'])]
     info['args'] = args
@@ -504,22 +490,5 @@ if __name__ == '__main__':
                 print(e)
                 print('not able to load from buffer: %s. exit() to continue with empty buffer' %args.buffer_loadpath)
 
-    # Scalar summaries for tensorboard: loss, average reward and evaluation score
-    ############################################
-    tf.reset_default_graph()
-    SUMM_WRITER = tf.summary.FileWriter(model_base_filedir)
-    with tf.name_scope('Performance'):
-        PTLOSS_PH = tf.placeholder(tf.float32, shape=None, name='ptloss_summary')
-        PTLOSS_SUMMARY = tf.summary.scalar('ptloss', PTLOSS_PH)
-        REWARD_PH = tf.placeholder(tf.float32, shape=None, name='reward_summary')
-        REWARD_SUMMARY = tf.summary.scalar('reward', REWARD_PH)
-        EVAL_SCORE_PH = tf.placeholder(tf.float32, shape=None, name='evaluation_summary')
-        EVAL_SCORE_SUMMARY = tf.summary.scalar('evaluation_score', EVAL_SCORE_PH)
-
-    PERFORMANCE_SUMMARIES = tf.summary.merge([PTLOSS_SUMMARY, REWARD_SUMMARY])
-
-    gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.05)
-    with tf.Session(config=tf.ConfigProto(gpu_options=gpu_options)) as sess:
-        ############################################
-        train(start_step_number, start_last_save)
+    train(start_step_number, start_last_save)
 
