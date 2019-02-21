@@ -1,4 +1,4 @@
-# bootstrap_dqn
+# Bootstrap DQN
 
 
 This repo contains our implementation of a Bootstrapped DQN with options to add a Randomized Prior, 

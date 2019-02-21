@@ -20,7 +20,6 @@ def seed_everything(seed=1234):
     os.environ['PYTHONHASHSEED'] = str(seed)
     #torch.backends.cudnn.deterministic = True
 
-
 def handle_step(random_state, cnt, S_hist, S_prime, action, reward, finished, k_used, acts, episodic_reward, replay_buffer, checkpoint='', n_ensemble=1, bernoulli_p=1.0):
     # mask to determine which head can use this experience
     exp_mask = random_state.binomial(1, bernoulli_p, n_ensemble).astype(np.uint8)
@@ -63,21 +62,23 @@ def write_info_file(info, model_base_filepath, cnt):
 
 def generate_gif(base_dir, step_number, frames_for_gif, reward, name='', results=[]):
     """
+    from @fg91
         Args:
             step_number: Integer, determining the number of the current frame
             frames_for_gif: A sequence of (210, 160, 3) frames of an Atari game in RGB
             reward: Integer, Total reward of the episode that es ouputted as a gif
             path: String, path where gif is saved
     """
-    if len(frames_for_gif[0].shape) == 3:
-        for idx, frame_idx in enumerate(frames_for_gif):
-            frames_for_gif[idx] = cv2.resize(frame_idx, (320, 220, 3)).astype(np.uint8)
-        gif_fname = os.path.join(base_dir, "ATARI_step%010d_r%04d_color%s.gif"%(step_number, int(reward), name))
+    from IPython import embed
+    embed()
+    for idx, frame_idx in enumerate(frames_for_gif):
+        frames_for_gif[idx] = cv2.resize(frame_idx, (320, 220)).astype(np.uint8)
+
+    if len(frames_for_gif[0].shape) == 2:
+        name+='gray'
     else:
-        for idx, frame_idx in enumerate(frames_for_gif):
-            #frames_for_gif[idx] = resize(frame_idx, (320, 220), preserve_range=True, order=0).astype(np.uint8)
-            frames_for_gif[idx] = cv2.resize(frame_idx, (320, 220)).astype(np.uint8)
-        gif_fname = os.path.join(base_dir, "ATARI_step%010d_r%04d_gray%s.gif"%(step_number, int(reward), name))
+        name+='color'
+    gif_fname = os.path.join(base_dir, "ATARI_step%010d_r%04d_%s.gif"%(step_number, int(reward), name))
 
     print("WRITING GIF", gif_fname)
     mimsave(gif_fname, frames_for_gif, duration=1/30)
@@ -87,7 +88,5 @@ def generate_gif(base_dir, step_number, frames_for_gif, reward, name='', results
         for ex in results:
             ff.write(ex+'\n')
         ff.close()
-
-
 
 
