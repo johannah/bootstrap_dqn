@@ -8,10 +8,17 @@ Dueling, and DoubleDQN in ALE games.
 
 [Randomized Prior Functions for Deep Reinforcement Learning](https://arxiv.org/abs/1806.03335)
 
-# Tested w/ dependencies
+# Some results from Freeway
 
-atari-py installed from https://github.com/kastnerkyle/atari-py
-torch='1.0.1.post2'
+![alt text](figs/small_ATARI_step0001508988_r0024_testcolor.gif?raw=true "Freeway Agent - Bootstrap with Prior")
+
+![alt text](figs/freeway_9heads_prior_episode_reward.png?raw=true "Freeway Agent - Bootstrap with Prior")
+
+# Dependencies
+
+atari-py installed from https://github.com/kastnerkyle/atari-py  
+torch='1.0.1.post2'  
+cv2='4.0.0'  
 
 
 # References

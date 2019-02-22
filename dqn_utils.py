@@ -11,7 +11,6 @@ def save_checkpoint(state, filename='model.pkl'):
     torch.save(state, filename)
     print("finished save of model %s" %filename)
 
-
 def seed_everything(seed=1234):
     #random.seed(seed)
     torch.manual_seed(seed)
@@ -69,8 +68,6 @@ def generate_gif(base_dir, step_number, frames_for_gif, reward, name='', results
             reward: Integer, Total reward of the episode that es ouputted as a gif
             path: String, path where gif is saved
     """
-    from IPython import embed
-    embed()
     for idx, frame_idx in enumerate(frames_for_gif):
         frames_for_gif[idx] = cv2.resize(frame_idx, (320, 220)).astype(np.uint8)
 
