@@ -8,11 +8,11 @@ This repo contains our implementation of a Bootstrapped DQN with options to add 
 
 # Some results on Breakout
 
+![alt text](figs/breakout_winning_gaps.gif?raw=true "Breakout Agent - Bootstrap, Prior")
+
 This gif depicts the orange agent from below winning the first game of Breakout and eventually winning a second game. The agent reaches a high score of 830 in this evaluation.  There are several gaps in playback due to file size. We show agent steps [1000-1500], [2400-2600], [3000-4500], and [16000-16300]. 
 
 ### Comparison:  
-
-![alt text](figs/breakout_winning_gaps.gif?raw=true "Breakout Agent - Bootstrap, Prior")
 
 - (blue) DQN with epsilon greed annealed between 1 and 0.01    
 - (orange) Bootstrap with epsilon greedy annealed between 1 and 0.01  
