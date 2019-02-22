@@ -28,8 +28,9 @@ Our agents are sent a terminal signal at the end of life. They face a determinis
 
 # Some results on Freeway
 
-![alt text](figs/small_ATARI_step0001508988_r0024_testcolor.gif?raw=true "Freeway Agent - Bootstrap with Prior")
+Here are some results on Freeway with Boostrap DQN w/ a Ransomized Prior. The random prior allowed us to solve this "hard exploration" problem quickly.
 
+![alt text](figs/small_ATARI_step0001508988_r0024_testcolor.gif?raw=true "Freeway Agent - Bootstrap with Prior")
 ![alt text](figs/freeway_9heads_prior_episode_reward.png?raw=true "Freeway Agent - Bootstrap with Prior")
 
 # Dependencies
