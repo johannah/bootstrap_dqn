@@ -22,7 +22,7 @@ This gif depicts the orange agent from below winning the first game of Breakout 
 All agents were implemented as Dueling, Double DQNs. The xlabel in these plots, "steps", 
 refers to the number of states the agent observed thus far in training. Multiply by 4 to account for a frame-skip of 4 to describe the total number of frames the emulator has progressed. 
 
-Our agents are sent a terminal signal at the end of life. They face a deterministic state progression after an random number<30 of no-op steps at the beginning of each episode. 
+Our agents are sent a terminal signal at the end of life. They face a deterministic state progression after a random number<30 of no-op steps at the beginning of each episode. 
 
 ![alt text](figs/breakout_avg_training_reward_steps.png?raw=true "Breakout Agent - Bootstrap, Prior")
 
