@@ -224,7 +224,7 @@ def train(step_number, last_save):
                 # Store transition in the replay memory
                 replay_memory.add_experience(action=action,
                                                 frame=next_state[-1],
-                                                reward=np.sign(reward),
+                                                reward=np.sign(reward), # TODO -maybe there should be +1 here
                                                 terminal=life_lost)
 
                 step_number += 1
@@ -325,9 +325,10 @@ if __name__ == '__main__':
     print("running on %s"%device)
 
     info = {
-        "GAME":'roms/breakout.bin', # gym prefix
+        #"GAME":'roms/breakout.bin', # gym prefix
+        "GAME":'roms/pong.bin', # gym prefix
         "DEVICE":device, #cpu vs gpu set by argument
-        "NAME":'FRANKbootstrap_fasteranneal', # start files with name
+        "NAME":'FRANKbootstrap_fasteranneal_pong', # start files with name
         "DUELING":True, # use dueling dqn
         "DOUBLE_DQN":True, # use double dqn
         "PRIOR":True, # turn on to use randomized prior
