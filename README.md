@@ -32,7 +32,7 @@ Here are some results on Pong with Boostrap DQN w/ a Randomized Prior. A optimal
 
 ![alt text](figs/small_pong_ATARI_step0002509459_r0021_testcolor.gif?raw=true "Breakout Agent - Bootstrap, Prior")
 
-![alt text](figs/pong_eval_rewards?raw=true "Eval Pong Agent - Bootstrap with Prior Reward v Steps")
+![alt text](figs/pong_eval_rewards_steps.png?raw=true "Eval Pong Agent - Bootstrap with Prior Reward v Steps")
 
 # Some results on Freeway
 
