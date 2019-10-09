@@ -32,15 +32,18 @@ Here are some results on Pong with Boostrap DQN w/ a Randomized Prior. A optimal
 
 ![alt text](figs/small_pong_ATARI_step0002509459_r0021_testcolor.gif?raw=true "Breakout Agent - Bootstrap, Prior")
 
+Pong agent score in evaluation - reward vs steps
 ![alt text](figs/pong_eval_rewards_steps.png?raw=true "Eval Pong Agent - Bootstrap with Prior Reward v Steps")
 
 # Some results on Freeway
 
-Here are some results on Freeway with Boostrap DQN w/ a Randomized Prior. The random prior allowed us to solve this "hard exploration" problem quickly.
+Here are some results on Freeway with Boostrap DQN w/ a Randomized Prior. The random prior allowed us to solve this "hard exploration" problem within 4 millions steps.
 
-![alt text](figs/small_ATARI_step0001508988_r0024_testcolor.gif?raw=true "Freeway Agent - Bootstrap with Prior")
+![alt text](figs/small_freeway_ATARI_s14547756_R34.gif?raw=true "Freeway Agent - Bootstrap with Prior")
 
-![alt text](figs/freeway_9heads_prior_episode_reward.png?raw=true "Freeway Agent - Bootstrap with Prior")
+Freeway agent score in evaluation - reward vs steps
+
+![alt text](figs/freeway_eval_rewards_steps.png?raw=true "Freeway Agent - Bootstrap with Prior")
 
 # Dependencies
 
