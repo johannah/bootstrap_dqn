@@ -26,9 +26,17 @@ Our agents are sent a terminal signal at the end of life. They face a determinis
 
 ![alt text](figs/breakout_avg_training_reward_steps.png?raw=true "Breakout Agent - Bootstrap, Prior")
 
+# Some results on Pong
+
+Here are some results on Pong with Boostrap DQN w/ a Randomized Prior. A optimal strategy is learned within 2.5m steps.
+
+![alt text](figs/small_pong_ATARI_step0002509459_r0021_testcolor.gif?raw=true "Breakout Agent - Bootstrap, Prior")
+
+![alt text](figs/pong_eval_rewards?raw=true "Eval Pong Agent - Bootstrap with Prior Reward v Steps")
+
 # Some results on Freeway
 
-Here are some results on Freeway with Boostrap DQN w/ a Ransomized Prior. The random prior allowed us to solve this "hard exploration" problem quickly.
+Here are some results on Freeway with Boostrap DQN w/ a Randomized Prior. The random prior allowed us to solve this "hard exploration" problem quickly.
 
 ![alt text](figs/small_ATARI_step0001508988_r0024_testcolor.gif?raw=true "Freeway Agent - Bootstrap with Prior")
 
